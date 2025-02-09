@@ -13,20 +13,20 @@ services:
       - redis
       - elasticsearch
     environment:
-      - OLLAMA_HOST=http://ollama:11434
-      - DATABASE_URL=postgresql://postgres:password@postgres:5432/docmind_db
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-      - ELASTICSEARCH_HOST=http://elasticsearch:9200
+      - OLLAMA_HOST=${OLLAMA_HOST}
+      - DATABASE_URL=${DATABASE_URL}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+      - ELASTICSEARCH_HOST=${ELASTICSEARCH_HOST}
     command: [ "python", "main.py" ]
 
   postgres:
     image: postgres:17
     container_name: docmind_db
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=docmind_db
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
     ports:
       - "5432:5432"
     volumes:
