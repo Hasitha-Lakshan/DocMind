@@ -1,0 +1,36 @@
+# Python
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+venv/
+.env
+
+# Logs
+logs/
+*.log
+
+# Docker
+docker-compose.override.yml
+.env
+docker_data/
+volumes/
+
+# Virtual environments
+pip-log.txt
+pip-delete-this-directory.txt
+
+# IDE and Editor Configurations
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Database files
+postgres_data/
+redis_data/
+elasticsearch_data/
+
+# MacOS & Linux system files
+.DS_Store
+Thumbs.db
