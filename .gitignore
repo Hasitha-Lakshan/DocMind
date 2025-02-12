@@ -31,6 +31,9 @@ postgres_data/
 redis_data/
 elasticsearch_data/
 
+# Inputs
+input_files/
+
 # MacOS & Linux system files
 .DS_Store
 Thumbs.db
