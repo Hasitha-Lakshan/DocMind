@@ -28,6 +28,7 @@ pip-delete-this-directory.txt
 
 # Database files
 postgres_data/
+ollama_data/
 redis_data/
 elasticsearch_data/
 
