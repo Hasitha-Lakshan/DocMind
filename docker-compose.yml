@@ -64,6 +64,8 @@ services:
     ports:
       - "11434:11434"
     restart: always
+    command: [ "ollama", "serve" ]  # Ensures Ollama starts correctly
+    entrypoint: [ "sh", "-c", "ollama pull nomic-embed-text && ollama serve" ]  # Pull model before serving
 
 volumes:
   postgres_data:
