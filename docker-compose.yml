@@ -10,18 +10,19 @@ services:
     depends_on:
       - ollama
       - postgres
-      - redis
+      - chromadb
       - elasticsearch
     environment:
       - OLLAMA_HOST=${OLLAMA_HOST}
       - DATABASE_URL=${DATABASE_URL}
-      - REDIS_HOST=${REDIS_HOST}
-      - REDIS_PORT=${REDIS_PORT}
+      - CHROMADB_HOST=${CHROMADB_HOST}
+      - CHROMADB_PORT=${CHROMADB_PORT}
       - ELASTICSEARCH_HOST=${ELASTICSEARCH_HOST}
-    command: [ "python", "main.py" ]
+    command: [ "tail", "-f", "/dev/null" ]  # Keeps the container running
+    # command: [ "python", "main.py" ]
 
   postgres:
-    image: postgres:17
+    build: ./postgres  # Use the custom Dockerfile
     container_name: docmind_db
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
@@ -30,15 +31,20 @@ services:
     ports:
       - "5432:5432"
     volumes:
+      - ./postgres/init-scripts:/docker-entrypoint-initdb.d  # Mount SQL files
       - postgres_data:/var/lib/postgresql/data
 
-  redis:
-    image: redis:7.4.2
-    container_name: docmind_cache
+  chromadb:
+    image: chromadb/chroma:latest
+    container_name: docmind_chromadb
     ports:
-      - "6379:6379"
+      - "8001:8000"  # Exposes ChromaDB on port 8001 (ChromaDB uses port 8000 internally)
     volumes:
-      - redis_data:/data
+      - chromadb_data:/chroma
+    environment:
+      - CHROMA_DB_DIR=/chroma  # Stores the database persistently
+      - CHROMA_HOST=0.0.0.0
+      - CHROMA_PORT=8000
 
   elasticsearch:
     image: elasticsearch:8.17.0
@@ -61,5 +67,5 @@ services:
 
 volumes:
   postgres_data:
-  redis_data:
+  chromadb_data:  # Persistent storage for ChromaDB
   elasticsearch_data:

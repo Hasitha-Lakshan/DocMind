@@ -2,5 +2,6 @@ pymupdf
 flask
 requests
 ollama
-psycopg2-binary  # For PostgreSQL
-redis  # For Redis
+psycopg[binary]
+python-dotenv
+chromadb
