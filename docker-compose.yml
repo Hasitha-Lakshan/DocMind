@@ -59,15 +59,16 @@ services:
       - elasticsearch_data:/usr/share/elasticsearch/data
 
   ollama:
-    image: ollama/ollama:0.5.7
+    build: ./ollama
     container_name: docmind_ollama
     ports:
       - "11434:11434"
     restart: always
-    command: [ "ollama", "serve" ]  # Ensures Ollama starts correctly
-    entrypoint: [ "sh", "-c", "ollama pull nomic-embed-text && ollama serve" ]  # Pull model before serving
+    volumes:
+      - ollama_data:/root/.ollama  # Ensures models persist
 
 volumes:
   postgres_data:
   chromadb_data:  # Persistent storage for ChromaDB
   elasticsearch_data:
+  ollama_data:  # Persistent storage for Ollama models
