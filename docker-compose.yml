@@ -5,6 +5,7 @@ services:
     build:
       context: .
     image: docmind_app:latest
+    pull_policy: build  # Force Docker to build instead of pulling
     container_name: docmind_app
     volumes: 
       - .:/app
@@ -40,6 +41,7 @@ services:
     build:
       context: ./postgres
     image: docmind_postgres:latest
+    pull_policy: build  # Force Docker to build instead of pulling
     container_name: docmind_db
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
@@ -79,6 +81,7 @@ services:
     build:
       context: ./ollama
     image: docmind_ollama:latest
+    pull_policy: build  # Force Docker to build instead of pulling
     container_name: docmind_ollama
     ports:
       - "11434:11434"
