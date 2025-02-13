@@ -1,28 +1,45 @@
+version: "3.8"
+
 services:
   docmind_app:
-    build: .
-    image: docmind_app
+    build:
+      context: .
+    image: docmind_app:latest
     container_name: docmind_app
     volumes: 
       - .:/app
     ports:
       - "8000:8000"
     depends_on:
-      - ollama
-      - postgres
-      - chromadb
-      - elasticsearch
+      postgres:
+        condition: service_started
+      chromadb:
+        condition: service_started
+      elasticsearch:
+        condition: service_started
+      ollama:
+        condition: service_started
     environment:
       - OLLAMA_HOST=${OLLAMA_HOST}
       - DATABASE_URL=${DATABASE_URL}
       - CHROMADB_HOST=${CHROMADB_HOST}
       - CHROMADB_PORT=${CHROMADB_PORT}
       - ELASTICSEARCH_HOST=${ELASTICSEARCH_HOST}
+      - NVIDIA_VISIBLE_DEVICES=all  # Added for GPU support
     command: [ "tail", "-f", "/dev/null" ]  # Keeps the container running
     # command: [ "python", "main.py" ]
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: ["gpu"]
 
   postgres:
-    build: ./postgres  # Use the custom Dockerfile
+    build:
+      context: ./postgres
+    image: docmind_postgres:latest
     container_name: docmind_db
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
@@ -31,18 +48,18 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./postgres/init-scripts:/docker-entrypoint-initdb.d  # Mount SQL files
+      - ./postgres/init-scripts:/docker-entrypoint-initdb.d
       - postgres_data:/var/lib/postgresql/data
 
   chromadb:
     image: chromadb/chroma:latest
     container_name: docmind_chromadb
     ports:
-      - "8001:8000"  # Exposes ChromaDB on port 8001 (ChromaDB uses port 8000 internally)
+      - "8001:8000"
     volumes:
       - chromadb_data:/chroma
     environment:
-      - CHROMA_DB_DIR=/chroma  # Stores the database persistently
+      - CHROMA_DB_DIR=/chroma
       - CHROMA_HOST=0.0.0.0
       - CHROMA_PORT=8000
 
@@ -59,16 +76,27 @@ services:
       - elasticsearch_data:/usr/share/elasticsearch/data
 
   ollama:
-    build: ./ollama
+    build:
+      context: ./ollama
+    image: docmind_ollama:latest
     container_name: docmind_ollama
     ports:
       - "11434:11434"
     restart: always
     volumes:
-      - ollama_data:/root/.ollama  # Ensures models persist
+      - ollama_data:/root/.ollama
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all # Added for GPU support
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: ["gpu"]
 
 volumes:
   postgres_data:
-  chromadb_data:  # Persistent storage for ChromaDB
+  chromadb_data:
   elasticsearch_data:
-  ollama_data:  # Persistent storage for Ollama models
+  ollama_data:
