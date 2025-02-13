@@ -9,5 +9,5 @@ sleep 10
 ollama pull llama3.2:1b
 ollama pull nomic-embed-text
 
-# Bring Ollama to the foreground to keep the container running
-fg %1
+# Keep the container running
+wait

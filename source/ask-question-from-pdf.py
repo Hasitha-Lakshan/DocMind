@@ -6,9 +6,11 @@ from dotenv import load_dotenv
 # Load environment variables from .env file
 load_dotenv()
 
+OLLAMA_HOST = os.getenv("OLLAMA_HOST")
+
 def generate_embeddings(text):
     # Initialize Ollama client
-    client = ollama.Client(host='http://host.docker.internal:11434')
+    client = ollama.Client(host=OLLAMA_HOST)
     response = client.embed(model='nomic-embed-text', input=text)
     vetorized_search_query = response['embeddings'][0]
     return vetorized_search_query
@@ -100,7 +102,7 @@ def generate_answer_from_llm(query_text,query_context):
         }
     ]
 
-    client = ollama.Client(host='http://host.docker.internal:11434')
+    client = ollama.Client(host=OLLAMA_HOST)
 
     response = client.chat(
         'llama3.2:1b',
