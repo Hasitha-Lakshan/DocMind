@@ -3,10 +3,10 @@
 ollama serve &
 
 # Wait for Ollama to be ready
-sleep 5
+sleep 10
 
 # Pull necessary models
-ollama pull llama3
+ollama pull llama3.2:1b
 ollama pull nomic-embed-text
 
 # Bring Ollama to the foreground to keep the container running
