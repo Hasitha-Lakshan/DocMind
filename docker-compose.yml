@@ -9,6 +9,7 @@ services:
     container_name: docmind_app
     volumes: 
       - .:/app
+      - docmind_python_libs:/usr/local/lib/python3.12/site-packages
     ports:
       - "8000:8000"
     depends_on:
@@ -103,3 +104,4 @@ volumes:
   chromadb_data:
   elasticsearch_data:
   ollama_data:
+  docmind_python_libs:
