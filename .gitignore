@@ -35,6 +35,9 @@ elasticsearch_data/
 # Inputs
 input_files/
 
+# Outputs
+output/
+
 # MacOS & Linux system files
 .DS_Store
 Thumbs.db
